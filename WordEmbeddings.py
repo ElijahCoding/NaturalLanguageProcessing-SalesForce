@@ -24,8 +24,8 @@ encoder = info.features['text'].encoder
 
 padded_shapes = ([None], ())
 
-train_batches = train_data.shuffle(1000).padded_batches(10, padded_shapes=padded_shapes)
-test_batches = test_data.shuffle(1000).padded_batches(10, padded_shapes=padded_shapes)
+train_batches = train_data.shuffle(1000).padded_batch(10, padded_shapes=padded_shapes)
+test_batches = test_data.shuffle(1000).padded_batch(10, padded_shapes=padded_shapes)
 
 embedding_dim = 16
 model = keras.Sequential([
@@ -36,5 +36,24 @@ model = keras.Sequential([
 
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
+history = model.fit(
+    train_batches,
+    epochs=20,
+    validation_data=test_batches, validation_steps=20)
 
-fdafda
+history_dict = history.history
+
+acc = history_dict['accuracy']
+val_acc = history_dict['val_accuracy']
+
+epochs = range(1, len(acc) + 1)
+
+plt.figure(figsize=(12, 9))
+plt.plot(epochs, acc, 'bo', label='Training accuracy')
+plt.plot(epochs, val_acc, 'b', label='Validation accuracy')
+plt.title('Training and validation accuracy.')
+plt.xlabel('Epocs')
+plt.ylabel('Accuracy')
+plt.legend(loc='lower right')
+plt.ylim((0.5, 1))
+plt.show()
