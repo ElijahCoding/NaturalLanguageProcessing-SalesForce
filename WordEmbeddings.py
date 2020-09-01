@@ -57,8 +57,8 @@ def plot_history(history):
     plt.show()
 
 def retrieve_embeddings():
-    out_vectors = io.open('vecs.tsv', 'w')
-    out_metadata = io.open('meta.tsv', 'w')
+    out_vectors = io.open('./data/vecs.tsv', 'w')
+    out_metadata = io.open('./data/meta.tsv', 'w')
     weights = model.layers[0].get_weights()[0]
 
     for num, word in enumerate(encoder.subwords):
