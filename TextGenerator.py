@@ -80,8 +80,31 @@ model = build_model(
     rnn_units=rnn_units,
     batch_size=BATCH_SIZE)
 
-for input_example_batch, target_example_batch in dataset.take(1):
-    example_batch_predictions = model(input_example_batch)
-    print(example_batch_predictions, '# (batch_size, seq_length, vocab_size)')
+# for input_example_batch, target_example_batch in dataset.take(1):
+#     example_batch_predictions = model(input_example_batch)
+#     print(example_batch_predictions, '# (batch_size, seq_length, vocab_size)')
 
 model.summary()
+
+def loss(labels, logits):
+    return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
+
+model.compile(optimizer='adam', loss=loss)
+
+checkpoint_dir = './training_checkpoints'
+# Name of the checkpoint files
+checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_{epoch}")
+
+checkpoint_callback=tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_prefix,
+    save_weights_only=True)
+
+EPOCHS=25
+
+history = model.fit(dataset, epochs=EPOCHS, callbacks=[checkpoint_callback])
+
+# tf.train.latest_checkpoint(checkpoint_dir)
+# model = build_model(vocab_size, embedding_dim, rnn_units, batch_size=1)
+# model.load_weights(tf.train.latest_checkpoint(checkpoint_dir))
+# model.build(tf.TensorShape([1, None]))
+# model.summary()
