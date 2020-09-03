@@ -47,6 +47,7 @@ def split_input_target(chunk):
     target_text = chunk[1:]
     return input_text, target_text
 
+
 dataset = sequences.map(split_input_target)
 
 # for input_example, target_example in dataset.take(1):
@@ -66,6 +67,7 @@ dataset = dataset.shuffle(BUFFER_SIZE).batch(BATCH_SIZE, drop_remainder=True)
 
 vocab_size = len(vocab)
 
+
 def build_model(vocab_size, embedding_dim, rnn_units, batch_size):
     model = tf.keras.Sequential([
         tf.keras.layers.Embedding(vocab_size, embedding_dim, batch_input_shape=[batch_size, None]),
@@ -73,6 +75,7 @@ def build_model(vocab_size, embedding_dim, rnn_units, batch_size):
         tf.keras.layers.Dense(vocab_size)
     ])
     return model
+
 
 model = build_model(
     vocab_size=len(vocab),
@@ -86,8 +89,10 @@ model = build_model(
 
 model.summary()
 
+
 def loss(labels, logits):
     return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
+
 
 model.compile(optimizer='adam', loss=loss)
 
@@ -95,13 +100,14 @@ checkpoint_dir = './training_checkpoints'
 # Name of the checkpoint files
 checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_{epoch}")
 
-checkpoint_callback=tf.keras.callbacks.ModelCheckpoint(
+checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath=checkpoint_prefix,
     save_weights_only=True)
 
-EPOCHS=25
+EPOCHS = 25
 
 history = model.fit(dataset, epochs=EPOCHS, callbacks=[checkpoint_callback])
+
 
 # tf.train.latest_checkpoint(checkpoint_dir)
 # model = build_model(vocab_size, embedding_dim, rnn_units, batch_size=1)
@@ -110,13 +116,24 @@ history = model.fit(dataset, epochs=EPOCHS, callbacks=[checkpoint_callback])
 # model.summary()
 
 def generate_text(model, start_string):
+    # Evaluation step (generating text using the learned model)
+
+    # Number of characters to generate
     num_generate = 1000
+
+    # Converting our start string to numbers (vectorizing)
     input_eval = [char2idx[s] for s in start_string]
     input_eval = tf.expand_dims(input_eval, 0)
 
+    # Empty string to store our results
     text_generated = []
+
+    # Low temperatures results in more predictable text.
+    # Higher temperatures results in more surprising text.
+    # Experiment to find the best setting.
     temperature = 1.0
 
+    # Here batch size == 1
     model.reset_states()
     for i in range(num_generate):
         predictions = model(input_eval)
@@ -134,5 +151,6 @@ def generate_text(model, start_string):
         text_generated.append(idx2char[predicted_id])
 
     return (start_string + ''.join(text_generated))
+
 
 print(generate_text(model, start_string=u"ROMEO: "))
