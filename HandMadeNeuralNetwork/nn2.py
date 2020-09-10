@@ -26,6 +26,12 @@ def visualize_data(img_array, label_array):
         ax[i].imshow(img, cmap='Greys', interpolation='nearest')
     plt.show()
 
+def encode_one_hot(y, num_labels=10):
+    one_hot = np.zeros((num_labels, y.shape[0]))
+    for i, val in enumerate(y):
+        one_hot[val, i] = 1.0
+    return one_hot
+
 
 
 # train_x, train_y, test_x, test_y = load_data()
