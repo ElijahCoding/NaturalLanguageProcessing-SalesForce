@@ -2,6 +2,7 @@ import struct
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from scipy.special import expit
 
 def load_data():
     with open('dataset/train-labels-idx1-ubyte', 'rb') as labels:
@@ -32,8 +33,22 @@ def encode_one_hot(y, num_labels=10):
         one_hot[val, i] = 1.0
     return one_hot
 
+def sigmoid(z):
+    # return(1 / (1 + np.exp(-z)))
+    return expit(z)
 
+def sigmoid_gradient(z):
+    s = sigmoid(z)
+    return s * (1 - s)
 
+def visualize_sigmoid():
+    x = np.arange(-10, 10, 0.1)
+    y = sigmoid(x)
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+    plt.show()
+
+visualize_sigmoid()
 # train_x, train_y, test_x, test_y = load_data()
 #
 # visualize_data(train_x, train_y)
