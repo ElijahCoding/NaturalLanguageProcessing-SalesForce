@@ -96,7 +96,7 @@ def loss(labels, logits):
 
 model.compile(optimizer='adam', loss=loss)
 
-checkpoint_dir = './training_checkpoints'
+checkpoint_dir = '../training_checkpoints'
 # Name of the checkpoint files
 checkpoint_prefix = os.path.join(checkpoint_dir, "ckpt_{epoch}")
 
