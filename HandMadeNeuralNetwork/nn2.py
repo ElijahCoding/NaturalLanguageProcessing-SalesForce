@@ -28,6 +28,6 @@ def visualize_data(img_array, label_array):
 
 
 
-train_x, train_y, test_x, test_y = load_data()
-
-visualize_data(train_x, train_y)
+# train_x, train_y, test_x, test_y = load_data()
+#
+# visualize_data(train_x, train_y)
