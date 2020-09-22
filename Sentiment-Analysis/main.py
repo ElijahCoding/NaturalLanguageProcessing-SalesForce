@@ -23,3 +23,18 @@ stop_words = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you"
               "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
 
+# Removing stop words from the tokenized words list
+final_words = []
+
+for word in tokenized_words:
+    if word not in stop_words:
+        final_words.append(word)
+
+# NLP Emotion Algorithm
+# 1) Check if the word in the final word list is also present in emotion.txt
+#  - open the emotion file
+#  - Loop through each line and clear it
+#  - Extract the word and emotion using split
+
+# 2) If word is present -> Add the emotion to emotion_list
+# 3) Finally count each emotion in the emotion list
